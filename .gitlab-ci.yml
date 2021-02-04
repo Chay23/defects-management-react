@@ -14,8 +14,8 @@ build:
     - docker build --pull -t "$CI_REGISTRY_IMAGE" .
     - docker push "$CI_REGISTRY_IMAGE"
     - echo "Build successfully!"
-     artifacts:
-      expire_in: 1 hour
-      paths:
-        - build
-        - node_modules/
+  artifacts:
+    expire_in: 1 hour
+    paths:
+      - build
+      - node_modules/
