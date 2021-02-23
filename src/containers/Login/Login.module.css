@@ -1,0 +1,19 @@
+.loginForm{
+    text-align: center;
+    margin-top: 300px;
+}
+
+.loginForm p{
+    margin: 10px 0 0 0;
+}
+
+.loginForm input{
+    width: 300px;
+}
+
+.customAlert{
+    width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 10px;
+}
