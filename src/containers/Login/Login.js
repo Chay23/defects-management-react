@@ -8,6 +8,7 @@ class Login extends Component{
     state = {
         email: '',
         password: '',
+        showPassword: false,
         error: false,
         message: ''
     }
@@ -22,15 +23,20 @@ class Login extends Component{
         .then(response => {
             const token = response.data.access_token;
             document.cookie = `token=${token}; path=/`;
-            this.setState({password: ''})
-            this.props.history.push('/admin/main')
+            this.setState({password: ''});
+            this.props.history.push('/admin/main');
         })
         .catch(error => {
             this.setState({
+                password: '',
                 error: true,
                 message: error.response.data.message,
-            })
+            });
         })
+    }
+
+    showPassword = () => {
+        this.setState(prevState => ({showPassword: !prevState.showPassword}))
     }
 
     render() {
@@ -42,7 +48,8 @@ class Login extends Component{
             <form onSubmit={this.handleFormSubmit} className={styles.loginForm}>
                 {error}
                 <p>Електронна пошта</p><input type='text' name='email' value={this.state.email} onChange={this.handleFormChange}/>
-                <p>Пароль</p><input type='password' name='password' value={this.state.password} onChange={this.handleFormChange}/>
+                <p>Пароль</p><input type={this.state.showPassword ? 'text' : 'password'} name='password' value={this.state.password} onChange={this.handleFormChange}/>
+                <p>Показати пароль<input type="checkbox" className={styles.inputCheckbox} onClick={this.showPassword}/></p>
                 <p><button className='btn btn-primary'>Sign in</button></p>
             </form> 
             </>

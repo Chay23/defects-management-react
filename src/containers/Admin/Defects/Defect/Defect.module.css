@@ -1,0 +1,26 @@
+.defectBlock p{
+    padding: 0 20px;
+}
+
+.defectBlock h3{
+    display: inline;
+}
+
+.defectBlock .defectHeader{
+    background-color: rgb(197, 197, 197);
+    padding: 10px 20px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+}
+
+.defectBlock .defectHeader .status{
+    display: inline;
+    width: fit-content;
+    border-radius: 20px;
+    padding: 5px 10px 5px 10px;
+    margin: 10px 20px;
+}
+
+.defectBlock img{
+    padding-left: 20px;
+}

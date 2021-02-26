@@ -1,11 +1,11 @@
 import styles from './Layout.module.css';
-import { NavLink } from 'react-router-dom'
+import { Link, NavLink } from 'react-router-dom'
 
 const layout = (props) => (
     <>
     <header className={styles.header}>
         <h2>Defects managment</h2>
-        <h2>Вихід</h2>
+        <a onClick={props.handleLogout}><h2>Вихід</h2></a>
     </header>
     <div className={styles.sidenav}>
         <NavLink activeClassName={styles.active} to='/admin/main'>Головна</NavLink>

@@ -1,15 +1,15 @@
 import React, { Component } from "react";
 import axios from '../../../axios';
 
-class UsersList extends Component{
+class Users extends Component{
     state = {
-        usersList: []
+        users: []
     }
 
     async componentDidMount() {
         await axios.get('/users')
             .then(response => {
-                this.setState({usersList: response.data})
+                this.setState({users: response.data})
             })
         
     }
@@ -17,11 +17,11 @@ class UsersList extends Component{
     render() {
         return(
             <div>
-                Admins list
+                Users list
             </div>
         );
         
     }
 }
 
-export default UsersList;
+export default Users;

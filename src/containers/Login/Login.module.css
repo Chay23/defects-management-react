@@ -17,3 +17,8 @@
     margin-right: auto;
     padding: 10px;
 }
+
+.loginForm .inputCheckbox{
+    width: fit-content;
+    margin-left: 10px;
+}

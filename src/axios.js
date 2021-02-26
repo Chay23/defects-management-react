@@ -1,12 +1,6 @@
 import axios from 'axios';
 import { baseUrl } from './config'; 
-
-const getCookie = (name) => {
-    let matches = document.cookie.match(new RegExp(
-      "(?:^|; )" + name.replace(/([.$?*|{}()[]\\\/\+^])/g, '\\$1') + "=([^;]*)"
-    ));
-    return matches ? decodeURIComponent(matches[1]) : undefined;
-}
+import {getCookie} from './components/GetCookie/GetCookie';
 
 const customAxios = axios.create({
     baseURL: baseUrl
