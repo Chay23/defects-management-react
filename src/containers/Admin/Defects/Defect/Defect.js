@@ -1,13 +1,17 @@
+import styles from './Defect.module.css';
 import React, { Component } from 'react';
 import axios from '../../../../axios';
 
-import styles from './Defect.module.css';
+import Modal from '../../../../components/Modal/Modal';
+import Confirmation from '../../../../components/Confirmation/Confirmation';
+
 
 class Defect extends Component{
     state = {
         defect: [],
         photoName: '',
-        image: null
+        image: null,
+        showConfirmation: false
     }
 
     componentDidMount = async () =>{
@@ -15,7 +19,7 @@ class Defect extends Component{
             .then(response => {
                 this.setState({defect: response.data})
                 this.setState({photoName: response.data.attachment})
-        })
+            })
         await axios.get('/defects/image/' + this.state.photoName)
             .then(response => {
                 this.decodePhoto(response.data.image_encode);
@@ -26,6 +30,20 @@ class Defect extends Component{
         let decodedImage = encodedImage.substring(2, encodedImage.length-1);
         this.setState({image: <img alt='defect' src={`data:image/jpeg;base64,${decodedImage}`} />})
     } 
+
+    handleConfirmationOpened = () => {
+        this.setState({showConfirmation: true})
+    }
+
+    handleConfirmationClosed = () => {
+        this.setState({showConfirmation: false})
+    }
+
+    handleDelete = async () => {
+        await axios.delete('/defects/' + this.props.match.params.defectId)
+        this.setState({showConfirmation: false})
+        this.props.history.push('/admin/defects')
+    }
 
     render() {
         const statusColor = this.props.getStatusColor(this.state.defect.info)
@@ -38,13 +56,19 @@ class Defect extends Component{
             <p>Кімната: {this.state.defect.room}</p>
             <p>Фото:</p>
             {this.state.image}
+            <button className='btn btn-danger' onClick={this.handleConfirmationOpened}>Delete</button>
         </div>
         
         return(
-            <div>
-                <h2>Дефект</h2>
-                {defect}
-            </div>
+            <>
+                <Modal show={this.state.showConfirmation} modalClosed={this.handleConfirmationClosed}>
+                        <Confirmation title='Ви впевнені?' onAgree={this.handleDelete} onCancel={this.handleConfirmationClosed}></Confirmation>
+                </Modal>
+                <div>
+                    <h2>Дефект</h2>
+                    {defect}
+                </div>
+            </>
         );
     }
 }

@@ -12,7 +12,8 @@
 }
 
 .header a{
-    cursor: pointer;
+    text-decoration: none;
+    color: #000;
 }
 
 .header a:hover h2{

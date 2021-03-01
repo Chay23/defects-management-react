@@ -17,7 +17,6 @@ class Admin extends Component{
 
     handleLogout = () => {
         document.cookie = 'token=; path=/';
-        this.props.history.push('/login')
     }
 
     render() {

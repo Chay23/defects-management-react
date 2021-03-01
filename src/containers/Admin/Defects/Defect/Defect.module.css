@@ -24,3 +24,7 @@
 .defectBlock img{
     padding-left: 20px;
 }
+
+.defectBlock button{
+    margin-top: 10px;
+}

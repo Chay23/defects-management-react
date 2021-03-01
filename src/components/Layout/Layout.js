@@ -5,7 +5,7 @@ const layout = (props) => (
     <>
     <header className={styles.header}>
         <h2>Defects managment</h2>
-        <a onClick={props.handleLogout}><h2>Вихід</h2></a>
+        <Link to='/login' onClick={props.handleLogout}><h2>Вихід</h2></Link>
     </header>
     <div className={styles.sidenav}>
         <NavLink activeClassName={styles.active} to='/admin/main'>Головна</NavLink>
