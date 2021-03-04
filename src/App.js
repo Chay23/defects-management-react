@@ -9,10 +9,10 @@ function App() {
   return (
     <>
       <Switch>
-        <Route exact path='/login' component={Login}/>
-        <ProtectedRoute path='/admin' component={Admin}/>
-        <Redirect from='/' to='/login'/>
-        <Route component={() => <h1>Not found 404</h1>}/>
+        <Route exact path='/login' component={Login} />
+        <ProtectedRoute path='/admin' component={Admin} />
+        <Redirect from='/' to='/login' />
+        <Route component={() => <h1>Not found 404</h1>} />
       </Switch>
     </>
   );

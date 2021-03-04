@@ -23,6 +23,7 @@
     grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
     padding: 10px 0 10px 10px ;
     border-radius: 5px;
+    height: 40px;
 }
 
 .defectsList .titles p{
