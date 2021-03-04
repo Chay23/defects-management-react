@@ -1,59 +1,59 @@
-.header{
-    width: 100%;
-    height: 70px;
-    position: fixed;
-    top: 0;
-    background-color: rgb(178, 253, 116);
-    box-shadow: 0 0 5px rgba(0,0,0,0.5);
-    display: flex;
-    justify-content: space-between;
-    padding: 10px 20px 0 20px;
-    z-index: 2;
+.header {
+  width: 100%;
+  height: 70px;
+  position: fixed;
+  top: 0;
+  background-color: rgb(178, 253, 116);
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 20px 0 20px;
+  z-index: 2;
 }
 
-.header a{
-    text-decoration: none;
-    color: #000;
+.header a {
+  text-decoration: none;
+  color: #000;
 }
 
-.header a:hover h2{
-    font-weight: 600;
+.header a:hover h2 {
+  font-weight: 600;
 }
 
-.sidenav{
-    margin-top: 70px;
-    height: 100%;
-    width: 300px;
-    position: fixed;
-    top: 0;
-    left: 0;
-    background-color: rgb(224, 224, 224);
-    box-shadow: 0 0 5px rgba(0,0,0,0.5);
-    padding-top: 20px;
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    z-index: 1;
+.sidenav {
+  margin-top: 70px;
+  height: 100%;
+  width: 300px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: rgb(224, 224, 224);
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+  padding-top: 20px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  z-index: 1;
 }
 
-.main{
-    margin: 70px 0px 10px 300px;
-    padding: 20px;
+.main {
+  margin: 70px 0px 10px 300px;
+  padding: 20px;
 }
-.sidenav a{
-    text-decoration: none;
-    font-size: x-large;
-    font-weight: 500;
-    color:rgb(153, 153, 153);
-    padding: 10px
+.sidenav a {
+  text-decoration: none;
+  font-size: x-large;
+  font-weight: 500;
+  color: rgb(153, 153, 153);
+  padding: 10px;
 }
-.sidenav a:hover{
-    text-decoration: none;
-    font-size: x-large;
-    font-weight: 500;
-    color:rgb(88, 88, 88);
+.sidenav a:hover {
+  text-decoration: none;
+  font-size: x-large;
+  font-weight: 500;
+  color: rgb(88, 88, 88);
 }
-.sidenav .active{
-    color:rgb(88, 88, 88);
-    background-color: rgb(255, 255, 255);
+.sidenav .active {
+  color: rgb(88, 88, 88);
+  background-color: rgb(255, 255, 255);
 }

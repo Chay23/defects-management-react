@@ -1,24 +1,24 @@
-.loginForm{
-    text-align: center;
-    margin-top: 300px;
+.loginForm {
+  text-align: center;
+  margin-top: 300px;
 }
 
-.loginForm p{
-    margin: 10px 0 0 0;
+.loginForm p {
+  margin: 10px 0 0 0;
 }
 
-.loginForm input{
-    width: 300px;
+.loginForm input {
+  width: 300px;
 }
 
-.customAlert{
-    width: 400px;
-    margin-left: auto;
-    margin-right: auto;
-    padding: 10px;
+.customAlert {
+  width: 400px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 10px;
 }
 
-.loginForm .inputCheckbox{
-    width: fit-content;
-    margin-left: 10px;
+.loginForm .inputCheckbox {
+  width: fit-content;
+  margin-left: 10px;
 }
