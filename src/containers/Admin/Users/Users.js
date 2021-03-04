@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import axios from '../../../axios';
+import axios from '../../../customAxios';
 import styles from './Users.module.css';
 import trashIcon from '../../../assets/images/trash-solid.svg';
 import userIcon from '../../../assets/images/user.svg';

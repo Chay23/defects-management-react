@@ -1,6 +1,6 @@
 import styles from './Defect.module.css';
 import React, { Component } from 'react';
-import axios from '../../../../axios';
+import axios from '../../../../customAxios';
 
 import Modal from '../../../../components/Modal/Modal';
 import Confirmation from '../../../../components/Confirmation/Confirmation';

@@ -1,7 +1,7 @@
 import styles from './Defects.module.css';
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import axios from '../../../axios';
+import axios from '../../../customAxios';
 import trashIcon from '../../../assets/images/trash-solid.svg';
 import Modal from '../../../components/Modal/Modal';
 import Confirmation from '../../../components/Confirmation/Confirmation';
