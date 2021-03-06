@@ -49,7 +49,6 @@ class Defect extends Component {
   };
 
   handleImageOpened = () => {
-    console.log('AAAAA');
     this.setState({ imageView: true });
   };
 

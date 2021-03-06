@@ -11,9 +11,10 @@ ENV PATH /app/node_modules/.bin:$PATH
 COPY package.json ./
 COPY package-lock.json ./
 RUN npm install --silent
+RUN npm install dotenv-cli --save
 
 # add app
 COPY . ./
 
 # start app
-CMD ["npm", "start"]
+CMD ["npm", "run", "start"]
