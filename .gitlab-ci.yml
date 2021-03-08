@@ -1,12 +1,17 @@
 stages:
   - build
-  - test
+  - deploy
+
+services:
+  - docker:dind
+
+variables:
+  HEROKU_APP_NAME: frozen-river-14012
+  HEROKU_REGISTRY_IMAGE: registry.heroku.com/${HEROKU_APP_NAME}/web
 
 build:
   stage: build
   image: docker:latest
-  services:
-    - docker:19.03.12-dind
   before_script:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
   script:
@@ -19,3 +24,18 @@ build:
     paths:
       - build
       - node_modules/
+
+deploy:
+  stage: deploy
+  services:
+    - docker:dind
+  before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+  script:
+    - echo "Start deploying App"
+    - docker login -u _ -p $HEROKU_AUTH_TOKEN registry.heroku.com
+    - docker push $HEROKU_REGISTRY_IMAGE
+    - apk add --no-cache curl
+    - echo "Deploy successfully!"
+  artifacts:
+    expire_in: 1 hour
