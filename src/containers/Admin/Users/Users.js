@@ -24,6 +24,16 @@ class Users extends Component {
     });
   }
 
+  showMessage = (message, text = '') => {
+    if (message === 'success') {
+      localStorage.setItem('message', text);
+      localStorage.setItem('style', ' alert alert-success');
+    } else if (message === 'error') {
+      localStorage.setItem('message', 'Сталась помилка');
+      localStorage.setItem('style', ' alert alert-danger');
+    }
+  };
+
   handleUserStatusColor = status => {
     return status ? (
       <p
@@ -60,23 +70,41 @@ class Users extends Component {
     const updatedUsersList = this.state.users.filter(
       user => user.id !== this.state.id
     );
-    await axios.delete('/users/' + this.state.id).then(() => {
-      this.setState({
-        users: updatedUsersList,
-        showConfirmation: false,
-        id: undefined,
+    await axios
+      .delete('/users/' + this.state.id)
+      .then(() => {
+        this.showMessage('success', 'Успішно видалено');
+        this.setState({
+          users: updatedUsersList,
+          showConfirmation: false,
+          id: undefined,
+        });
+      })
+      .catch(() => {
+        this.showMessage('error');
       });
-    });
+    localStorage.clear();
   };
 
   handleActivation = async () => {
-    await axios.post('/users/active/' + this.state.id).then(response => {
-      this.setState({
-        users: response.data,
-        showConfirmation: false,
-        id: undefined,
+    await axios
+      .post('/users/active/' + this.state.id)
+      .then(response => {
+        this.showMessage('success', 'Успішно змінено статус');
+        this.setState({
+          users: response.data,
+          showConfirmation: false,
+          id: undefined,
+        });
+      })
+      .catch(() => {
+        this.showMessage('error');
+        this.setState({
+          showConfirmation: false,
+          id: undefined,
+        });
       });
-    });
+    localStorage.clear();
   };
 
   handleUpdateClosed = e => {
@@ -100,20 +128,37 @@ class Users extends Component {
     e.preventDefault();
     data.role = this.handleRole(data.role);
     data.is_active = Boolean(data.is_active);
-    await axios.put('/users/' + this.state.id, data).then(response => {
-      const updatedUsersList = this.state.users.map(user =>
-        user.id === this.state.id ? (user = response.data) : user
-      );
-      this.setState({
-        users: updatedUsersList,
-        showConfirmation: false,
-        editMode: false,
-        id: undefined,
+    await axios
+      .put('/users/' + this.state.id, data)
+      .then(response => {
+        const updatedUsersList = this.state.users.map(user =>
+          user.id === this.state.id ? (user = response.data) : user
+        );
+        this.showMessage('success', 'Успішно оновлено');
+        this.setState({
+          users: updatedUsersList,
+          showConfirmation: false,
+          editMode: false,
+          id: undefined,
+        });
+      })
+      .catch(() => {
+        this.showMessage('error');
+        this.setState({
+          showConfirmation: false,
+          editMode: false,
+          id: undefined,
+        });
       });
-    });
+    localStorage.clear();
   };
 
   render() {
+    const message = localStorage.message ? (
+      <div className={styles.customAlert + localStorage.style}>
+        {localStorage.message}
+      </div>
+    ) : null;
     const usersList =
       this.state.users.length !== 0 ? (
         this.state.users.map(user => {
@@ -196,6 +241,7 @@ class Users extends Component {
           {innerContent}
         </Modal>
         <div className={styles.usersList}>
+          {message}
           <h2>Користувачі</h2>
           <div className={styles.titles}>
             <p>Повне ім'я</p>

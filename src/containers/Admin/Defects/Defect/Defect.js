@@ -43,13 +43,22 @@ class Defect extends Component {
   };
 
   handleDelete = async () => {
-    await axios.delete('/defects/' + this.props.match.params.defectId);
-    this.setState({ showConfirmation: false });
-    this.props.history.push('/admin/defects');
+    await axios
+      .delete('/defects/' + this.props.match.params.defectId)
+      .then(() => {
+        localStorage.setItem('message', 'Успішно видалено');
+        localStorage.setItem('style', ' alert alert-success');
+        this.setState({ showConfirmation: false });
+        this.props.history.push('/admin/defects');
+      })
+      .catch(() => {
+        localStorage.setItem('style', ' alert alert-danger');
+        localStorage.setItem('message', 'Сталась помилка');
+      });
+    localStorage.clear();
   };
 
   handleImageOpened = () => {
-    console.log('AAAAA');
     this.setState({ imageView: true });
   };
 

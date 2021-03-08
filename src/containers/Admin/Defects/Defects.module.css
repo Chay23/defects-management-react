@@ -1,58 +1,63 @@
-.defectsList{
-    display: flex;
-    flex-direction: column;
+.defectsList {
+  display: flex;
+  flex-direction: column;
 }
 
-.defectsList h2{
-    margin-bottom: 20px;
-}   
-
-.defectsList a{
-    text-decoration: none;
-    color: black;
+.defectsList h2 {
+  margin-bottom: 20px;
 }
 
-.defectsList a:hover{
-    text-decoration: none;
-    font-weight: 600;
+.defectsList a {
+  text-decoration: none;
+  color: black;
 }
 
-.defectsList .titles{
-    background-color: rgb(197, 197, 197);
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
-    padding: 10px 0 10px 10px ;
-    border-radius: 5px;
-    height: 40px;
+.defectsList a:hover {
+  text-decoration: none;
+  font-weight: 600;
 }
 
-.defectsList .titles p{
-    margin-bottom: 0;
+.defectsList .titles {
+  background-color: rgb(197, 197, 197);
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  padding: 10px 0 10px 10px;
+  border-radius: 5px;
+  height: 40px;
 }
 
-.defectBlock img{
-    width: 20px;
-    margin-top: 14px;
-    cursor: pointer;
+.defectsList .titles p {
+  margin-bottom: 0;
 }
 
-.defectBlock{
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
-    background-color: white;
-    padding-left: 5px;
-    text-overflow: ellipsis;
+.defectBlock img {
+  width: 20px;
+  margin-top: 14px;
+  cursor: pointer;
 }
 
-.defectBlock p{
-    font-size: medium;
-    margin: 10px 0;
-    padding: 5px 5px;
+.defectBlock {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  background-color: white;
+  padding-left: 5px;
+  text-overflow: ellipsis;
 }
 
-.defectBlock .status{
-    width: fit-content;
-    border-radius: 20px;
-    padding: 5px 10px 5px 10px;
-    margin: 10px 0;
+.defectBlock p {
+  font-size: medium;
+  margin: 10px 0;
+  padding: 5px 5px;
+}
+
+.defectBlock .status {
+  width: fit-content;
+  border-radius: 20px;
+  padding: 5px 10px 5px 10px;
+  margin: 10px 0;
+}
+
+.customAlert {
+  width: 100%;
+  padding: 10px;
 }

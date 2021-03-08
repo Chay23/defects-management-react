@@ -12,12 +12,18 @@ class Defects extends Component {
     id: undefined,
     showConfirmation: false,
     delete: false,
+    showMessage: false,
   };
 
   async componentDidMount() {
+    localStorage.clear();
     await axios.get('/defects').then(response => {
       this.setState({ defects: response.data });
     });
+  }
+
+  componentWillUnmount() {
+    localStorage.clear();
   }
 
   handleConfirmationOpened = id => {
@@ -35,19 +41,37 @@ class Defects extends Component {
   };
 
   handleDelete = async () => {
+    localStorage.clear();
     const updatedDefectsList = this.state.defects.filter(
       defect => defect.id !== this.state.id
     );
-    await axios.delete('/defects/' + this.state.id).then(() => {
-      this.setState({
-        defects: updatedDefectsList,
-        showConfirmation: false,
-        id: undefined,
+    await axios
+      .delete('/defects/' + this.state.id)
+      .then(() => {
+        localStorage.setItem('message', 'Успішно видалено');
+        localStorage.setItem('style', ' alert alert-success');
+        this.setState({
+          defects: updatedDefectsList,
+          showConfirmation: false,
+          id: undefined,
+        });
+      })
+      .catch(() => {
+        localStorage.setItem('message', 'Сталась помилка');
+        localStorage.setItem('style', ' alert alert-danger');
+        this.setState({
+          showConfirmation: false,
+          id: undefined,
+        });
       });
-    });
   };
 
   render() {
+    const message = localStorage.message ? (
+      <div className={styles.customAlert + localStorage.style}>
+        {localStorage.message}
+      </div>
+    ) : null;
     const defectsList =
       this.state.defects.length !== 0 ? (
         this.state.defects.map(defect => {
@@ -90,6 +114,7 @@ class Defects extends Component {
           ></Confirmation>
         </Modal>
         <div className={styles.defectsList}>
+          {message}
           <h2>Дефекти</h2>
           <div className={styles.titles}>
             <p>Назва</p>
