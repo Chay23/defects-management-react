@@ -7,7 +7,7 @@ services:
 
 variables:
   DOCKER_DRIVER: overlay
-  HEROKU_APP_NAME: frozen-river-14012
+  HEROKU_APP_NAME: defects-management-react
   HEROKU_REGISTRY_IMAGE: registry.heroku.com/${HEROKU_APP_NAME}/web
 
 build:
@@ -22,9 +22,6 @@ build:
     - echo "Build successfully!"
   artifacts:
     expire_in: 1 hour
-    paths:
-      - build
-      - node_modules/
 
 deploy:
   stage: deploy
