@@ -21,7 +21,6 @@ build:
     - docker pull $IMAGE:latest || true
     - docker build
       --cache-from $IMAGE:latest
-      --tag $IMAGE:latest
       --file ./Dockerfile
       "."
     - docker push $IMAGE:latest
