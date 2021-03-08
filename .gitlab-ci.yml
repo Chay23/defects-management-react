@@ -45,3 +45,5 @@ deploy:
     - echo "Deploy successfully!"
   artifacts:
     expire_in: 1 hour
+  only:
+    - main
