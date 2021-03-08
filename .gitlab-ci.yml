@@ -13,12 +13,16 @@ variables:
 build:
   stage: build
   image: docker:latest
-  before_script:
-    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
   script:
     - echo "Start building App"
-    - docker build --pull -t "$CI_REGISTRY_IMAGE" .
-    - docker push "$CI_REGISTRY_IMAGE"
+    - docker login -u $CI_REGISTRY_USER -p $CI_JOB_TOKEN $CI_REGISTRY
+    - docker pull $IMAGE:latest || true
+    - docker build
+      --cache-from $IMAGE:latest
+      --tag $IMAGE:latest
+      --file ./Dockerfile
+      "."
+    - docker push $IMAGE:latest
     - echo "Build successfully!"
   artifacts:
     expire_in: 1 hour
