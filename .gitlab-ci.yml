@@ -40,6 +40,8 @@ deploy:
       "."
     - docker login -u _ -p $HEROKU_AUTH_TOKEN registry.heroku.com
     - docker push $HEROKU_REGISTRY_IMAGE
+    - chmod +x ./release.sh
+    - ./release.sh
     - echo "Deploy successfully!"
   artifacts:
     expire_in: 1 hour
