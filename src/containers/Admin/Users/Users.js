@@ -7,6 +7,7 @@ import editIcon from '../../../assets/images/edit.svg';
 import Modal from '../../../components/Modal/Modal';
 import Confirmation from '../../../components/Confirmation/Confirmation';
 import UpdateUserForm from '../../UpdateUserForm/UpdateUserForm';
+import Spinner from '../../../components/Spinner/Spinner';
 
 class Users extends Component {
   state = {
@@ -16,11 +17,16 @@ class Users extends Component {
     showConfirmation: false,
     action: null,
     editMode: false,
+    loading: false,
   };
 
   async componentDidMount() {
+    this.setState({ loading: true });
     await axios.get('/users').then(response => {
-      this.setState({ users: response.data });
+      this.setState({
+        users: response.data,
+        loading: false,
+      });
     });
   }
 
@@ -159,7 +165,7 @@ class Users extends Component {
         {localStorage.message}
       </div>
     ) : null;
-    const usersList =
+    let usersList =
       this.state.users.length !== 0 ? (
         this.state.users.map(user => {
           const status = this.handleUserStatusColor(user.is_active);
@@ -211,6 +217,10 @@ class Users extends Component {
       ) : (
         <p style={{ marginLeft: '10px' }}>Список порожній</p>
       );
+
+    if (this.state.loading) {
+      usersList = <Spinner />;
+    }
 
     let innerContent = null;
     if (this.state.showConfirmation) {

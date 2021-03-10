@@ -6,6 +6,7 @@ WORKDIR /app
 
 # add `/app/node_modules/.bin` to $PATH
 ENV PATH /app/node_modules/.bin:$PATH
+ENV REACT_APP_API_URL=https://defects-management.herokuapp.com
 
 # install app dependencies
 COPY package.json ./
