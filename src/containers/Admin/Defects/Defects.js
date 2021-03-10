@@ -5,6 +5,7 @@ import axios from '../../../customAxios';
 import trashIcon from '../../../assets/images/trash-solid.svg';
 import Modal from '../../../components/Modal/Modal';
 import Confirmation from '../../../components/Confirmation/Confirmation';
+import Spinner from '../../../components/Spinner/Spinner';
 
 class Defects extends Component {
   state = {
@@ -13,12 +14,17 @@ class Defects extends Component {
     showConfirmation: false,
     delete: false,
     showMessage: false,
+    loading: false,
   };
 
   async componentDidMount() {
     localStorage.clear();
+    this.setState({ loading: true });
     await axios.get('/defects').then(response => {
-      this.setState({ defects: response.data });
+      this.setState({
+        defects: response.data,
+        loading: false,
+      });
     });
   }
 
@@ -72,7 +78,7 @@ class Defects extends Component {
         {localStorage.message}
       </div>
     ) : null;
-    const defectsList =
+    let defectsList =
       this.state.defects.length !== 0 ? (
         this.state.defects.map(defect => {
           const statusColor = this.props.getStatusColor(defect.info);
@@ -101,6 +107,9 @@ class Defects extends Component {
         <p style={{ marginLeft: '10px' }}>Список порожній</p>
       );
 
+    if (this.state.loading) {
+      defectsList = <Spinner />;
+    }
     return (
       <>
         <Modal

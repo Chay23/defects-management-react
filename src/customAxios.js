@@ -6,8 +6,15 @@ const customAxios = axios.create({
   baseURL: baseUrl,
 });
 
-customAxios.defaults.headers.common['Authorization'] = `Bearer ${getCookie(
-  'token'
-)}`;
+customAxios.interceptors.request.use(
+  config => {
+    const token = getCookie('token');
+    config.headers['Authorization'] = 'Bearer ' + token;
+    return config;
+  },
+  error => {
+    Promise.reject(error);
+  }
+);
 
 export default customAxios;
