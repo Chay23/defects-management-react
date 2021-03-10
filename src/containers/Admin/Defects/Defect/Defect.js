@@ -1,16 +1,20 @@
 import styles from './Defect.module.css';
 import React, { Component } from 'react';
-import axios from '../../../../axios';
+import axios from '../../../../customAxios';
 
 import Modal from '../../../../components/Modal/Modal';
 import Confirmation from '../../../../components/Confirmation/Confirmation';
+import ImageBackdrop from '../../../../components/ImageBackdrop/ImageBackdrop';
+
+import closeIcon from '../../../../assets/images/close.svg';
 
 class Defect extends Component {
   state = {
     defect: [],
     photoName: '',
-    image: null,
+    decodedImage: null,
     showConfirmation: false,
+    imageView: false,
   };
 
   componentDidMount = async () => {
@@ -21,17 +25,13 @@ class Defect extends Component {
         this.setState({ photoName: response.data.attachment });
       });
     await axios.get('/defects/image/' + this.state.photoName).then(response => {
-      this.decodePhoto(response.data.image_encode);
+      this.decodeImage(response.data.image_encode);
     });
   };
 
-  decodePhoto = encodedImage => {
+  decodeImage = encodedImage => {
     let decodedImage = encodedImage.substring(2, encodedImage.length - 1);
-    this.setState({
-      image: (
-        <img alt='defect' src={`data:image/jpeg;base64,${decodedImage}`} />
-      ),
-    });
+    this.setState({ decodedImage: decodedImage });
   };
 
   handleConfirmationOpened = () => {
@@ -43,9 +43,27 @@ class Defect extends Component {
   };
 
   handleDelete = async () => {
-    await axios.delete('/defects/' + this.props.match.params.defectId);
-    this.setState({ showConfirmation: false });
-    this.props.history.push('/admin/defects');
+    await axios
+      .delete('/defects/' + this.props.match.params.defectId)
+      .then(() => {
+        localStorage.setItem('message', 'Успішно видалено');
+        localStorage.setItem('style', ' alert alert-success');
+        this.setState({ showConfirmation: false });
+        this.props.history.push('/admin/defects');
+      })
+      .catch(() => {
+        localStorage.setItem('style', ' alert alert-danger');
+        localStorage.setItem('message', 'Сталась помилка');
+      });
+    localStorage.clear();
+  };
+
+  handleImageOpened = () => {
+    this.setState({ imageView: true });
+  };
+
+  handleImageClosed = () => {
+    this.setState({ imageView: false });
   };
 
   render() {
@@ -61,7 +79,12 @@ class Defect extends Component {
         <p>Опис: {this.state.defect.description}</p>
         <p>Кімната: {this.state.defect.room}</p>
         <p>Фото:</p>
-        {this.state.image}
+        <img
+          alt='defect'
+          src={`data:image/jpeg;base64,${this.state.decodedImage}`}
+          onClick={this.handleImageOpened}
+        />
+        <br />
         <button
           className='btn btn-danger'
           onClick={this.handleConfirmationOpened}
@@ -83,6 +106,20 @@ class Defect extends Component {
             onCancel={this.handleConfirmationClosed}
           ></Confirmation>
         </Modal>
+        <ImageBackdrop
+          show={this.state.imageView}
+          clicked={this.handleImageClosed}
+        >
+          <div className={styles.biggerPhotoBlock}>
+            <img
+              alt='defect'
+              src={`data:image/jpeg;base64,${this.state.decodedImage}`}
+            />
+            <span className={styles.closeBlock}>
+              <img src={closeIcon} title='Закрити' alt='Закрити'></img>
+            </span>
+          </div>
+        </ImageBackdrop>
         <div>
           <h2>Дефект</h2>
           {defect}
