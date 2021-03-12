@@ -15,6 +15,7 @@ class Defects extends Component {
     delete: false,
     showMessage: false,
     loading: false,
+    filterStatus: undefined,
   };
 
   async componentDidMount() {
@@ -72,41 +73,77 @@ class Defects extends Component {
       });
   };
 
+  handleFilterByStatus = e => {
+    const filterValue = e.target.value;
+    switch (filterValue) {
+      case 'open':
+        this.setState({ filterStatus: 'Відкрито' });
+        break;
+      case 'in_process':
+        this.setState({ filterStatus: 'В процесі' });
+        break;
+      case 'closed':
+        this.setState({ filterStatus: 'Закрито' });
+        break;
+      default:
+        this.setState({ filterStatus: undefined });
+        break;
+    }
+  };
+
+  filterByStatus = () => {
+    let defectsList = null;
+    defectsList = this.state.defects.filter(
+      defect => defect.info === this.state.filterStatus
+    );
+    defectsList = defectsList.map(defect => this.defectConstructor(defect));
+    if (defectsList.length === 0) {
+      defectsList = <p style={{ marginLeft: '10px' }}>Не знайдено</p>;
+    }
+    return defectsList;
+  };
+
+  defectConstructor = defect => {
+    const statusColor = this.props.getStatusColor(defect.info);
+    return (
+      <div key={defect.id} className={styles.defectBlock}>
+        <Link to={this.props.match.url + '/' + defect.id}>
+          <p>{defect.title}</p>
+        </Link>
+        <p>{defect.description}</p>
+        <p>{defect.room}</p>
+        <p className={styles.status} style={statusColor}>
+          {defect.info}
+        </p>
+        <div className={styles.actionsBlock}>
+          <img
+            src={trashIcon}
+            onClick={() => this.handleConfirmationOpened(defect.id)}
+            title='Видалити'
+            alt='Видалити'
+          />
+        </div>
+      </div>
+    );
+  };
+
   render() {
     const message = localStorage.message ? (
       <div className={styles.customAlert + localStorage.style}>
         {localStorage.message}
       </div>
     ) : null;
-    let defectsList =
-      this.state.defects.length !== 0 ? (
-        this.state.defects.map(defect => {
-          const statusColor = this.props.getStatusColor(defect.info);
-          return (
-            <div key={defect.id} className={styles.defectBlock}>
-              <Link to={this.props.match.url + '/' + defect.id}>
-                <p>{defect.title}</p>
-              </Link>
-              <p>{defect.description}</p>
-              <p>{defect.room}</p>
-              <p className={styles.status} style={statusColor}>
-                {defect.info}
-              </p>
-              <div className={styles.actionsBlock}>
-                <img
-                  src={trashIcon}
-                  onClick={() => this.handleConfirmationOpened(defect.id)}
-                  title='Видалити'
-                  alt='Видалити'
-                />
-              </div>
-            </div>
-          );
-        })
-      ) : (
-        <p style={{ marginLeft: '10px' }}>Список порожній</p>
-      );
-
+    let defectsList = null;
+    if (this.state.filterStatus) {
+      defectsList = this.filterByStatus();
+    } else {
+      defectsList =
+        this.state.defects.length !== 0 ? (
+          this.state.defects.map(defect => this.defectConstructor(defect))
+        ) : (
+          <p style={{ marginLeft: '10px' }}>Список порожній</p>
+        );
+    }
     if (this.state.loading) {
       defectsList = <Spinner />;
     }
@@ -124,7 +161,18 @@ class Defects extends Component {
         </Modal>
         <div className={styles.defectsList}>
           {message}
-          <h2>Дефекти</h2>
+          <div className={styles.helperBlock}>
+            <h2>Дефекти</h2>
+            <div className={styles.filterOne}>
+            <span>Фільтр по статусу</span>
+            <select onChange={this.handleFilterByStatus}>
+              <option value='undefined'>Фільтр відсутній</option>
+              <option value='open'>Відкрито</option>
+              <option value='in_process'>В процесі</option>
+              <option value='closed'>Закрито</option>
+            </select>
+            </div>
+          </div>
           <div className={styles.titles}>
             <p>Назва</p>
             <p>Опис</p>
