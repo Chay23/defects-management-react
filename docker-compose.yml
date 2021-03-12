@@ -2,8 +2,8 @@ version: '3.7'
 
 services:
 
-  front:
-    container_name: front
+  defects-management-react:
+    container_name: defects-management-react
     build:
       context: .
       dockerfile: Dockerfile
