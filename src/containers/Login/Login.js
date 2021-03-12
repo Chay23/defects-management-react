@@ -27,10 +27,6 @@ class Login extends Component {
       .then(response => {
         const token = response.data.access_token;
         document.cookie = `token=${token}; path=/`;
-        this.setState({
-          password: '',
-          loading: false,
-        });
         this.props.history.push('/admin/main');
       })
       .catch(error => {

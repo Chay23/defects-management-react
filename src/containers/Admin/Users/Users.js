@@ -13,11 +13,13 @@ class Users extends Component {
   state = {
     users: [],
     user: null,
-    id: undefined,
     showConfirmation: false,
     action: null,
     editMode: false,
     loading: false,
+    searchValue: '',
+    filterStatus: undefined,
+    filterRole: undefined,
   };
 
   async componentDidMount() {
@@ -55,9 +57,9 @@ class Users extends Component {
     );
   };
 
-  handleConfirmationOpened = (id, action) => {
+  handleConfirmationOpened = (user, action) => {
     this.setState({
-      id: id,
+      user: user,
       showConfirmation: true,
       action: action,
     });
@@ -65,7 +67,7 @@ class Users extends Component {
 
   handleConfirmationClosed = () => {
     this.setState({
-      id: undefined,
+      user: null,
       showConfirmation: false,
       action: null,
       editMode: false,
@@ -74,16 +76,16 @@ class Users extends Component {
 
   handleDelete = async () => {
     const updatedUsersList = this.state.users.filter(
-      user => user.id !== this.state.id
+      user => user.id !== this.state.user.id
     );
     await axios
-      .delete('/users/' + this.state.id)
+      .delete('/users/' + this.state.user.id)
       .then(() => {
         this.showMessage('success', 'Успішно видалено');
         this.setState({
           users: updatedUsersList,
           showConfirmation: false,
-          id: undefined,
+          user: null,
         });
       })
       .catch(() => {
@@ -92,29 +94,40 @@ class Users extends Component {
     localStorage.clear();
   };
 
-  handleActivation = async () => {
+  handleStatus = async () => {
     await axios
-      .post('/users/active/' + this.state.id)
+      .post('/users/active/' + this.state.user.id)
       .then(response => {
         this.showMessage('success', 'Успішно змінено статус');
         this.setState({
           users: response.data,
           showConfirmation: false,
-          id: undefined,
+          user: null,
         });
       })
       .catch(() => {
         this.showMessage('error');
         this.setState({
           showConfirmation: false,
-          id: undefined,
+          user: null,
         });
       });
     localStorage.clear();
   };
 
+  handleUpdateOpened = user => {
+    this.setState({
+      user: user,
+      editMode: true,
+    });
+  };
+
   handleUpdateClosed = e => {
     e.preventDefault();
+    this.setState({
+      user: null,
+      editMode: false,
+    });
   };
 
   handleRole = role => {
@@ -135,17 +148,17 @@ class Users extends Component {
     data.role = this.handleRole(data.role);
     data.is_active = Boolean(data.is_active);
     await axios
-      .put('/users/' + this.state.id, data)
+      .put('/users/' + this.state.user.id, data)
       .then(response => {
         const updatedUsersList = this.state.users.map(user =>
-          user.id === this.state.id ? (user = response.data) : user
+          user.id === this.state.user.id ? (user = response.data) : user
         );
         this.showMessage('success', 'Успішно оновлено');
         this.setState({
           users: updatedUsersList,
           showConfirmation: false,
           editMode: false,
-          id: undefined,
+          user: null,
         });
       })
       .catch(() => {
@@ -153,10 +166,121 @@ class Users extends Component {
         this.setState({
           showConfirmation: false,
           editMode: false,
-          id: undefined,
+          user: null,
         });
       });
     localStorage.clear();
+  };
+
+  handleChangeSearchValue = e => {
+    this.setState({ searchValue: e.target.value.toLocaleLowerCase() });
+  };
+
+  filterByName = () => {
+    let usersList = null;
+    usersList = this.state.users.filter(user =>
+      (user.first_name + ' ' + user.last_name)
+        .toLocaleLowerCase()
+        .match(this.state.searchValue)
+    );
+    usersList = usersList.map(user => this.userConstructor(user));
+    if (usersList.length === 0) {
+      usersList = <p style={{ marginLeft: '10px' }}>Не знайдено</p>;
+    }
+    return usersList;
+  };
+
+  handleFilterByStatus = e => {
+    const filterValue = e.target.value;
+    switch (filterValue) {
+      case 'true':
+        this.setState({ filterStatus: true });
+        break;
+      case 'false':
+        this.setState({ filterStatus: false });
+        break;
+      default:
+        this.setState({ filterStatus: undefined });
+        break;
+    }
+  };
+
+  filterByStatus = () => {
+    let usersList = null;
+    usersList = this.state.users.filter(
+      user => user.is_active === this.state.filterStatus
+    );
+    usersList = usersList.map(user => this.userConstructor(user));
+    if (usersList.length === 0) {
+      usersList = <p style={{ marginLeft: '10px' }}>Не знайдено</p>;
+    }
+    return usersList;
+  };
+
+  handleFilterByRole = e => {
+    const filterValue = e.target.value;
+    switch (filterValue) {
+      case 'Не визначено':
+        this.setState({ filterRole: filterValue });
+        break;
+      case 'Технічний працівник':
+        this.setState({ filterRole: filterValue });
+        break;
+      case 'Санітарний працівник':
+        this.setState({ filterRole: filterValue });
+        break;
+      default:
+        this.setState({ filterRole: undefined });
+        break;
+    }
+  };
+
+  filterByRole = () => {
+    let usersList = null;
+    usersList = this.state.users.filter(
+      user => user.role === this.state.filterRole
+    );
+    usersList = usersList.map(user => this.userConstructor(user));
+    if (usersList.length === 0) {
+      usersList = <p style={{ marginLeft: '10px' }}>Не знайдено</p>;
+    }
+    return usersList;
+  };
+
+  userConstructor = user => {
+    const status = this.handleUserStatusColor(user.is_active);
+    return (
+      <div key={user.telegram_id} className={styles.userBlock}>
+        <p>{user.first_name + ' ' + user.last_name}</p>
+        <p>{user.telegram_id}</p>
+        <p>{user.role}</p>
+        {status}
+        <div>
+          <img
+            src={userIcon}
+            onClick={() =>
+              this.handleConfirmationOpened(user, this.handleStatus)
+            }
+            title='Активувати/деактивувати'
+            alt='Активувати/деактивувати'
+          />
+          <img
+            src={editIcon}
+            onClick={() => this.handleUpdateOpened(user)}
+            title='Редагувати'
+            alt='Редагувати'
+          />
+          <img
+            src={trashIcon}
+            onClick={() =>
+              this.handleConfirmationOpened(user, this.handleDelete)
+            }
+            title='Видалити'
+            alt='Видалити'
+          />
+        </div>
+      </div>
+    );
   };
 
   render() {
@@ -165,58 +289,21 @@ class Users extends Component {
         {localStorage.message}
       </div>
     ) : null;
-    let usersList =
-      this.state.users.length !== 0 ? (
-        this.state.users.map(user => {
-          const status = this.handleUserStatusColor(user.is_active);
-          return (
-            <div key={user.telegram_id} className={styles.userBlock}>
-              <p>{user.first_name + ' ' + user.last_name}</p>
-              <p>{user.telegram_id}</p>
-              <p>{user.role}</p>
-              {status}
-              <div>
-                <img
-                  src={userIcon}
-                  onClick={() =>
-                    this.handleConfirmationOpened(
-                      user.id,
-                      this.handleActivation
-                    )
-                  }
-                  title='Активувати/деактивувати'
-                  alt='Активувати/деактивувати'
-                />
-                <img
-                  src={editIcon}
-                  onClick={() => {
-                    this.setState({
-                      user: user,
-                      editMode: true,
-                    });
-                    return this.handleConfirmationOpened(
-                      user.id,
-                      this.handleUpdate
-                    );
-                  }}
-                  title='Редагувати'
-                  alt='Редагувати'
-                />
-                <img
-                  src={trashIcon}
-                  onClick={() =>
-                    this.handleConfirmationOpened(user.id, this.handleDelete)
-                  }
-                  title='Видалити'
-                  alt='Видалити'
-                />
-              </div>
-            </div>
-          );
-        })
-      ) : (
-        <p style={{ marginLeft: '10px' }}>Список порожній</p>
-      );
+    let usersList = null;
+    if (this.state.searchValue) {
+      usersList = this.filterByName(this.state.users);
+    } else if (this.state.filterStatus !== undefined) {
+      usersList = this.filterByStatus(this.state.users);
+    } else if (this.state.filterRole !== undefined) {
+      usersList = this.filterByRole(this.state.users);
+    } else {
+      usersList =
+        this.state.users.length !== 0 ? (
+          this.state.users.map(user => this.userConstructor(user))
+        ) : (
+          <p style={{ marginLeft: '10px' }}>Список порожній</p>
+        );
+    }
 
     if (this.state.loading) {
       usersList = <Spinner />;
@@ -231,8 +318,7 @@ class Users extends Component {
           onCancel={this.handleConfirmationClosed}
         />
       );
-    }
-    if (this.state.editMode) {
+    } else if (this.state.editMode) {
       innerContent = (
         <UpdateUserForm
           user={this.state.user}
@@ -245,14 +331,43 @@ class Users extends Component {
     return (
       <>
         <Modal
-          show={this.state.showConfirmation}
+          show={this.state.showConfirmation || this.state.editMode}
           modalClosed={this.handleConfirmationClosed}
         >
           {innerContent}
         </Modal>
         <div className={styles.usersList}>
           {message}
-          <h2>Користувачі</h2>
+          <div className={styles.helperBlock}>
+            <h2>Користувачі</h2>
+            <div className={styles.searchBlock}>
+              Пошук
+              <input
+                type='text'
+                onChange={this.handleChangeSearchValue}
+                placeholder='Ім&#39;я та прізвище'
+              />
+            </div>
+            <div className={styles.filterOne}>
+              <span>Фільтр по статусу</span>
+              <select onChange={this.handleFilterByStatus}>
+                <option value='undefined'>Фільтр відсутній</option>
+                <option value='true'>Активний</option>
+                <option value='false'>Неактивний</option>
+              </select>
+            </div>
+            <div className={styles.filterTwo}>
+              <span>Фільтр по посаді</span>
+              <select onChange={this.handleFilterByRole}>
+                <option value='undefined'>Фільтр відсутній</option>
+                <option value='Не визначено'>Не визначено</option>
+                <option value='Технічний працівник'>Технічний працівник</option>
+                <option value='Санітарний працівник'>
+                  Санітарний працівник
+                </option>
+              </select>
+            </div>
+          </div>
           <div className={styles.titles}>
             <p>Повне ім'я</p>
             <p>Телеграм ID</p>
