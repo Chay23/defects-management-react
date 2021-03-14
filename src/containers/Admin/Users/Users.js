@@ -29,7 +29,10 @@ class Users extends Component {
         users: response.data,
         loading: false,
       });
-    });
+    }).catch(()=> {
+      this.showMessage('error','Відсутнє з\'єднання');
+      this.setState({loading: false})
+    })
   }
 
   showMessage = (message, text = '') => {
@@ -37,7 +40,7 @@ class Users extends Component {
       localStorage.setItem('message', text);
       localStorage.setItem('style', ' alert alert-success');
     } else if (message === 'error') {
-      localStorage.setItem('message', 'Сталась помилка');
+      localStorage.setItem('message', text || 'Сталась помилка');
       localStorage.setItem('style', ' alert alert-danger');
     }
   };

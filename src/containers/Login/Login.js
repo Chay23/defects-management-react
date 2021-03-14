@@ -30,12 +30,21 @@ class Login extends Component {
         this.props.history.push('/admin/users');
       })
       .catch(error => {
-        this.setState({
-          password: '',
-          error: true,
-          message: error.response.data.message,
-          loading: false,
-        });
+        if (error.response) {
+          this.setState({
+            password: '',
+            error: true,
+            message: error.response.data.message,
+            loading: false,
+          });
+        } else {
+          this.setState({
+            error: true,
+            message: "Відсутнє з'єднання",
+            password: '',
+            loading: false,
+          });
+        }
       });
   };
 
