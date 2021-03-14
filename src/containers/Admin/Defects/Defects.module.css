@@ -61,3 +61,15 @@
   width: 100%;
   padding: 10px;
 }
+
+.defectsList .helperBlock{
+  display: flex;
+}
+
+.helperBlock .filterOne{
+  margin: 5px 30px
+}
+
+.helperBlock .filterOne select{
+  margin: 4px;
+}
