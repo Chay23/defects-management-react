@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Route, Switch } from 'react-router-dom';
 import Layout from '../../components/Layout/Layout';
-import Main from './Main/Main';
 import Users from './Users/Users';
 import Defects from './Defects/Defects';
 import Defect from './Defects/Defect/Defect';
@@ -26,7 +25,6 @@ class Admin extends Component {
     return (
       <Layout handleLogout={this.handleLogout}>
         <Switch>
-          <Route path='/admin/main' exact component={Main}></Route>
           <Route path='/admin/users' exact component={Users}></Route>
           <Route
             path='/admin/defects'
