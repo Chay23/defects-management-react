@@ -27,15 +27,24 @@ class Login extends Component {
       .then(response => {
         const token = response.data.access_token;
         document.cookie = `token=${token}; path=/`;
-        this.props.history.push('/admin/main');
+        this.props.history.push('/admin/users');
       })
       .catch(error => {
-        this.setState({
-          password: '',
-          error: true,
-          message: error.response.data.message,
-          loading: false,
-        });
+        if (error.response) {
+          this.setState({
+            password: '',
+            error: true,
+            message: error.response.data.message,
+            loading: false,
+          });
+        } else {
+          this.setState({
+            error: true,
+            message: "Відсутнє з'єднання",
+            password: '',
+            loading: false,
+          });
+        }
       });
   };
 
@@ -47,7 +56,7 @@ class Login extends Component {
     const cookie = getCookie('token');
     const spinner = this.state.loading ? <Spinner /> : null;
     if (cookie !== undefined && cookie.length !== 0) {
-      this.props.history.push('/admin/main');
+      this.props.history.push('/admin/users');
     }
     const error = this.state.error ? (
       <div className={styles.customAlert + ' alert alert-danger'}>

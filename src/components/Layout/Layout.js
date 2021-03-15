@@ -10,9 +10,6 @@ const layout = props => (
       </Link>
     </header>
     <div className={styles.sidenav}>
-      <NavLink activeClassName={styles.active} to='/admin/main'>
-        Головна
-      </NavLink>
       <NavLink activeClassName={styles.active} to='/admin/users'>
         Користувачі
       </NavLink>

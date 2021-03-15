@@ -21,12 +21,19 @@ class Defects extends Component {
   async componentDidMount() {
     localStorage.clear();
     this.setState({ loading: true });
-    await axios.get('/defects').then(response => {
-      this.setState({
-        defects: response.data,
-        loading: false,
+    await axios
+      .get('/defects')
+      .then(response => {
+        this.setState({
+          defects: response.data,
+          loading: false,
+        });
+      })
+      .catch(() => {
+        localStorage.setItem('message', 'Відсутнє з\'єдання');
+        localStorage.setItem('style', ' alert alert-danger');
+        this.setState({loading: false})
       });
-    });
   }
 
   componentWillUnmount() {
@@ -164,13 +171,13 @@ class Defects extends Component {
           <div className={styles.helperBlock}>
             <h2>Дефекти</h2>
             <div className={styles.filterOne}>
-            <span>Фільтр по статусу</span>
-            <select onChange={this.handleFilterByStatus}>
-              <option value='undefined'>Фільтр відсутній</option>
-              <option value='open'>Відкрито</option>
-              <option value='in_process'>В процесі</option>
-              <option value='closed'>Закрито</option>
-            </select>
+              <span>Фільтр по статусу</span>
+              <select onChange={this.handleFilterByStatus}>
+                <option value='undefined'>Фільтр відсутній</option>
+                <option value='open'>Відкрито</option>
+                <option value='in_process'>В процесі</option>
+                <option value='closed'>Закрито</option>
+              </select>
             </div>
           </div>
           <div className={styles.titles}>
